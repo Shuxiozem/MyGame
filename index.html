@@ -3,87 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>My Battle Lobby</title>
+<title>My Battle Game</title>
 
 <style>
-*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+*{
+  box-sizing:border-box;
+  -webkit-user-select:none;
+  user-select:none;
+}
 
 html,body{
   margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#080a10;
   font-family:Arial,sans-serif;
+  background:#090b12;
 }
 
-#game{
-  position:relative;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:radial-gradient(circle at 50% 30%,#555b80,#202437 48%,#090b12);
-}
-
-#game3d{
+.screen{
   position:absolute;
   inset:0;
 }
 
-.top{
-  position:absolute;
-  top:15px;
-  left:15px;
-  right:15px;
-  display:flex;
-  justify-content:space-between;
-  z-index:10;
+.hidden{
+  display:none;
 }
 
-.box{
-  padding:9px 13px;
-  border-radius:10px;
-  background:rgba(10,10,18,.8);
+/* LOBBY */
+
+#lobby{
+  background:
+    radial-gradient(circle at 50% 35%,#555b80,#202437 50%,#090b12);
   color:white;
 }
 
-.name{
-  color:#c77cff;
-  font-weight:bold;
-}
-
-.title{
-  position:absolute;
-  top:75px;
-  width:100%;
+.logo{
   text-align:center;
-  color:white;
-  font-size:23px;
+  margin-top:70px;
+  font-size:28px;
   font-weight:bold;
   letter-spacing:3px;
-  text-shadow:0 0 15px #8b35ff;
-  z-index:10;
 }
 
-.health{
+.play{
   position:absolute;
-  top:115px;
+  bottom:45px;
   left:50%;
   transform:translateX(-50%);
-  width:150px;
-  height:14px;
-  border-radius:10px;
-  background:#222;
-  overflow:hidden;
-  z-index:10;
+  width:210px;
+  padding:17px;
+  border:0;
+  border-radius:14px;
+  background:#8b35ff;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 0 25px #8b35ff88;
 }
 
-.healthBar{
+.lobbyText{
+  position:absolute;
+  top:130px;
+  width:100%;
+  text-align:center;
+  color:#ddd;
+}
+
+/* PARTIDA */
+
+#match{
+  background:
+    linear-gradient(
+      #52709a 0%,
+      #8aa36e 48%,
+      #536344 49%,
+      #30382d 100%
+    );
+}
+
+.map{
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 80px,
+      rgba(255,255,255,.025) 81px,
+      transparent 82px
+    );
+}
+
+/* Objetivo */
+
+.target{
+  position:absolute;
+  width:65px;
+  height:125px;
+  right:23%;
+  top:48%;
+  transform:translateY(-50%);
+}
+
+.targetHead{
+  width:43px;
+  height:43px;
+  margin:auto;
+  border-radius:50%;
+  background:#c98e69;
+}
+
+.targetBody{
+  width:60px;
+  height:75px;
+  margin:auto;
+  border-radius:18px;
+  background:#c93636;
+}
+
+.targetHealth{
+  width:80px;
+  height:8px;
+  margin:-140px auto 0;
+  background:#222;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.targetHealthBar{
   width:100%;
   height:100%;
-  background:#55d66b;
-  transition:.2s;
+  background:#51d36a;
 }
+
+/* Personaje */
+
+.player{
+  position:absolute;
+  left:27%;
+  top:48%;
+  transform:translate(-50%,-50%);
+  width:70px;
+  height:145px;
+}
+
+.playerHead{
+  width:44px;
+  height:44px;
+  margin:auto;
+  border-radius:50%;
+  background:#c98e69;
+}
+
+.playerBody{
+  width:62px;
+  height:72px;
+  margin:auto;
+  border-radius:18px;
+  background:#8b35ff;
+}
+
+.playerLegs{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+.leg{
+  width:20px;
+  height:45px;
+  background:#171923;
+  border-radius:10px;
+}
+
+/* Controles */
 
 .joystick{
   position:absolute;
@@ -92,20 +186,19 @@ html,body{
   width:125px;
   height:125px;
   border-radius:50%;
-  background:rgba(255,255,255,.12);
-  border:2px solid rgba(255,255,255,.25);
-  z-index:20;
-  touch-action:none;
+  background:#ffffff18;
+  border:2px solid #ffffff35;
+  z-index:10;
 }
 
 .stick{
   position:absolute;
+  left:35px;
+  top:35px;
   width:55px;
   height:55px;
-  left:33px;
-  top:33px;
   border-radius:50%;
-  background:rgba(139,53,255,.85);
+  background:#8b35ffcc;
 }
 
 .fire{
@@ -118,401 +211,204 @@ html,body{
   border-radius:50%;
   background:#8b35ff;
   color:white;
-  font-size:17px;
   font-weight:bold;
-  box-shadow:0 0 25px rgba(139,53,255,.6);
-  z-index:20;
+  font-size:16px;
+  box-shadow:0 0 25px #8b35ff88;
 }
 
-.fire:active{
-  transform:scale(.92);
-}
-
-.info{
+.exit{
   position:absolute;
-  bottom:15px;
-  left:50%;
-  transform:translateX(-50%);
-  color:#ddd;
-  font-size:12px;
-  z-index:10;
-  text-align:center;
-  white-space:nowrap;
+  top:20px;
+  left:20px;
+  padding:10px 15px;
+  border:0;
+  border-radius:10px;
+  background:#111827dd;
+  color:white;
 }
 
-.flash{
+.message{
   position:absolute;
-  left:50%;
-  top:50%;
-  width:30px;
-  height:30px;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 0 35px 15px #ffd84d;
-  transform:translate(-50%,-50%) scale(.2);
-  opacity:0;
-  pointer-events:none;
-  z-index:30;
-}
-
-.flash.show{
-  animation:impact .18s ease-out;
-}
-
-@keyframes impact{
-  0%{
-    opacity:1;
-    transform:translate(-50%,-50%) scale(.2);
-  }
-  100%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(1.8);
-  }
-}
-
-#message{
-  position:absolute;
-  top:145px;
+  top:25px;
   width:100%;
   text-align:center;
-  color:#fff;
+  color:white;
   font-weight:bold;
-  z-index:10;
 }
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<!-- LOBBY -->
 
-  <div id="game3d"></div>
+<div id="lobby" class="screen">
 
-  <div class="top">
-    <div class="box">
-      👤 <span class="name">PLAYER</span><br>
-      Nivel 1
+  <div class="logo">
+    MY BATTLE LOBBY
+  </div>
+
+  <div class="lobbyText">
+    Entrenamiento
+  </div>
+
+  <button class="play" onclick="startMatch()">
+    JUGAR
+  </button>
+
+</div>
+
+
+<!-- PARTIDA -->
+
+<div id="match" class="screen hidden">
+
+  <div class="map"></div>
+
+  <button class="exit" onclick="backLobby()">
+    ← SALIR
+  </button>
+
+  <div id="message" class="message">
+    OBJETIVO DE ENTRENAMIENTO
+  </div>
+
+  <!-- PERSONAJE -->
+
+  <div id="player" class="player">
+
+    <div class="playerHead"></div>
+
+    <div class="playerBody"></div>
+
+    <div class="playerLegs">
+      <div class="leg"></div>
+      <div class="leg"></div>
     </div>
 
-    <div class="box">
-      🪙 1,250 &nbsp; 💎 150
+  </div>
+
+  <!-- OBJETIVO -->
+
+  <div class="target">
+
+    <div class="targetHead"></div>
+
+    <div class="targetBody"></div>
+
+    <div class="targetHealth">
+      <div id="targetHealthBar"
+           class="targetHealthBar"></div>
     </div>
+
   </div>
 
-  <div class="title">
-    TRAINING ARENA
-  </div>
-
-  <div class="health">
-    <div id="healthBar" class="healthBar"></div>
-  </div>
-
-  <div id="message">
-    OBJETIVO: 100 HP
-  </div>
-
-  <div id="flash" class="flash"></div>
+  <!-- JOYSTICK -->
 
   <div id="joystick" class="joystick">
     <div id="stick" class="stick"></div>
   </div>
 
-  <button id="fire" class="fire">
-    🔫<br>DISPARAR
-  </button>
+  <!-- DISPARO -->
 
-  <div class="info">
-    Arrastra el joystick para moverte • Pulsa DISPARAR para practicar
-  </div>
+  <button id="fire" class="fire">
+    🔫<br>
+    DISPARAR
+  </button>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <script>
-const container=document.getElementById("game3d");
 
-const scene=new THREE.Scene();
+const lobby =
+  document.getElementById("lobby");
 
-const camera=new THREE.PerspectiveCamera(
-  45,
-  innerWidth/innerHeight,
-  .1,
-  100
-);
+const match =
+  document.getElementById("match");
 
-camera.position.set(0,2.4,8);
+const player =
+  document.getElementById("player");
 
-const renderer=new THREE.WebGLRenderer({
-  antialias:true,
-  alpha:true
-});
+const healthBar =
+  document.getElementById("targetHealthBar");
 
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
+const message =
+  document.getElementById("message");
 
-container.appendChild(renderer.domElement);
 
-/* Luces */
+function startMatch(){
 
-scene.add(
-  new THREE.AmbientLight(0xffffff,1.8)
-);
+  lobby.classList.add("hidden");
 
-const light=new THREE.DirectionalLight(
-  0xffffff,
-  2.5
-);
+  match.classList.remove("hidden");
 
-light.position.set(3,6,5);
-scene.add(light);
-
-/* Suelo */
-
-const floor=new THREE.Mesh(
-  new THREE.CircleGeometry(6,64),
-  new THREE.MeshStandardMaterial({
-    color:0x171a27,
-    roughness:.8
-  })
-);
-
-floor.rotation.x=-Math.PI/2;
-floor.position.y=-2;
-scene.add(floor);
-
-/* Personaje */
-
-const player=new THREE.Group();
-player.position.set(0,-1.7,0);
-scene.add(player);
-
-const skin=new THREE.MeshStandardMaterial({
-  color:0xd49a72
-});
-
-const hair=new THREE.MeshStandardMaterial({
-  color:0x27a83d
-});
-
-const clothes=new THREE.MeshStandardMaterial({
-  color:0x252b42
-});
-
-const jacket=new THREE.MeshStandardMaterial({
-  color:0x8b35ff
-});
-
-const dark=new THREE.MeshStandardMaterial({
-  color:0x11131b
-});
-
-/* Cabeza */
-
-const head=new THREE.Mesh(
-  new THREE.SphereGeometry(.43,32,32),
-  skin
-);
-
-head.scale.set(.9,1.08,.9);
-head.position.y=2.35;
-player.add(head);
-
-/* Cabello */
-
-const hairMesh=new THREE.Mesh(
-  new THREE.SphereGeometry(.47,32,32),
-  hair
-);
-
-hairMesh.scale.set(1,.62,1);
-hairMesh.position.y=2.7;
-player.add(hairMesh);
-
-/* Torso */
-
-const torso=new THREE.Mesh(
-  new THREE.CapsuleGeometry(.52,.85,12,24),
-  clothes
-);
-
-torso.position.y=1.45;
-player.add(torso);
-
-/* Chaqueta */
-
-const coat=new THREE.Mesh(
-  new THREE.BoxGeometry(1.12,1.2,.72),
-  jacket
-);
-
-coat.position.y=1.5;
-player.add(coat);
-
-/* Brazos */
-
-function arm(x){
-  const a=new THREE.Mesh(
-    new THREE.CapsuleGeometry(.15,.85,8,16),
-    skin
-  );
-
-  a.position.set(x,1.45,0);
-  player.add(a);
 }
 
-arm(-.72);
-arm(.72);
 
-/* Piernas */
+function backLobby(){
 
-function leg(x){
-  const l=new THREE.Mesh(
-    new THREE.CapsuleGeometry(.19,.95,8,16),
-    dark
-  );
+  match.classList.add("hidden");
 
-  l.position.set(x,.25,0);
-  player.add(l);
+  lobby.classList.remove("hidden");
+
 }
 
-leg(-.28);
-leg(.28);
 
-/* Botas */
-
-function boot(x){
-  const b=new THREE.Mesh(
-    new THREE.BoxGeometry(.4,.25,.65),
-    dark
-  );
-
-  b.position.set(x,-.45,.08);
-  player.add(b);
-}
-
-boot(-.28);
-boot(.28);
-
-/* Arma ficticia */
-
-const weapon=new THREE.Group();
-
-const receiver=new THREE.Mesh(
-  new THREE.BoxGeometry(.18,.18,.8),
-  dark
-);
-
-receiver.rotation.x=Math.PI/2;
-receiver.position.z=.45;
-weapon.add(receiver);
-
-const barrel=new THREE.Mesh(
-  new THREE.CylinderGeometry(.055,.055,.65,12),
-  dark
-);
-
-barrel.rotation.x=Math.PI/2;
-barrel.position.z=.95;
-weapon.add(barrel);
-
-weapon.position.set(.85,1.45,.35);
-weapon.rotation.y=.2;
-
-player.add(weapon);
-
-/* Objetivo */
-
-const target=new THREE.Group();
-
-target.position.set(0,0,-3);
-
-scene.add(target);
-
-const targetBody=new THREE.Mesh(
-  new THREE.CapsuleGeometry(.45,1.0,8,16),
-  new THREE.MeshStandardMaterial({
-    color:0xd93636
-  })
-);
-
-targetBody.position.y=.2;
-target.add(targetBody);
-
-const targetHead=new THREE.Mesh(
-  new THREE.SphereGeometry(.35,24,24),
-  new THREE.MeshStandardMaterial({
-    color:0xc98e69
-  })
-);
-
-targetHead.position.y=1.25;
-target.add(targetHead);
-
-/* Vida */
+/* DISPARAR */
 
 let health=100;
 
-const healthBar=
-  document.getElementById("healthBar");
-
-const message=
-  document.getElementById("message");
-
-const flash=
-  document.getElementById("flash");
-
-/* Disparo */
-
-document.getElementById("fire")
+document
+.getElementById("fire")
 .addEventListener("click",()=>{
 
-  if(health<=0)return;
+  if(health<=0) return;
 
   health-=10;
 
-  if(health<0)health=0;
+  healthBar.style.width =
+    health+"%";
 
-  healthBar.style.width=health+"%";
-
-  flash.classList.remove("show");
-
-  void flash.offsetWidth;
-
-  flash.classList.add("show");
-
-  message.textContent=
-    "IMPACTO • "+health+" HP";
+  message.textContent =
+    "IMPACTO — "+health+" HP";
 
   if(health===0){
 
-    message.textContent=
+    message.textContent =
       "OBJETIVO COMPLETADO";
 
     setTimeout(()=>{
+
       health=100;
-      healthBar.style.width="100%";
-      message.textContent=
-        "OBJETIVO: 100 HP";
+
+      healthBar.style.width =
+        "100%";
+
+      message.textContent =
+        "OBJETIVO DE ENTRENAMIENTO";
+
     },1500);
+
   }
 
 });
 
-/* Joystick */
 
-const joystick=
+/* JOYSTICK */
+
+const joystick =
   document.getElementById("joystick");
 
-const stick=
+const stick =
   document.getElementById("stick");
 
-let joystickActive=false;
+let active=false;
 
 joystick.addEventListener(
   "touchstart",
   ()=>{
-    joystickActive=true;
+    active=true;
   },
   {passive:true}
 );
@@ -521,37 +417,41 @@ joystick.addEventListener(
   "touchmove",
   e=>{
 
-    if(!joystickActive)return;
+    if(!active)return;
 
-    const rect=joystick.getBoundingClientRect();
+    const rect =
+      joystick.getBoundingClientRect();
 
-    const x=
-      e.touches[0].clientX-
-      rect.left-
+    let x =
+      e.touches[0].clientX -
+      rect.left -
       rect.width/2;
 
-    const y=
-      e.touches[0].clientY-
-      rect.top-
+    let y =
+      e.touches[0].clientY -
+      rect.top -
       rect.height/2;
 
-    const distance=Math.min(
-      Math.sqrt(x*x+y*y),
-      35
-    );
+    const distance =
+      Math.min(Math.hypot(x,y),35);
 
-    const angle=Math.atan2(y,x);
+    const angle =
+      Math.atan2(y,x);
 
-    const moveX=
+    x =
       Math.cos(angle)*distance;
 
-    const moveY=
+    y =
       Math.sin(angle)*distance;
 
-    stick.style.transform=
-      `translate(${moveX}px,${moveY}px)`;
+    stick.style.transform =
+      `translate(${x}px,${y}px)`;
 
-    player.position.x+=moveX*.0008;
+    player.style.transform =
+      `translate(
+        calc(-50% + ${x}px),
+        calc(-50% + ${y}px)
+      )`;
 
   },
   {passive:true}
@@ -560,46 +460,15 @@ joystick.addEventListener(
 joystick.addEventListener(
   "touchend",
   ()=>{
-    joystickActive=false;
-    stick.style.transform="translate(0,0)";
-  }
-);
 
-/* Animación */
+    active=false;
 
-function animate(){
-
-  requestAnimationFrame(animate);
-
-  target.rotation.y+=.003;
-
-  player.position.y=
-    -1.7+
-    Math.sin(Date.now()*.002)*.02;
-
-  renderer.render(scene,camera);
-}
-
-animate();
-
-/* Pantalla */
-
-window.addEventListener(
-  "resize",
-  ()=>{
-
-    camera.aspect=
-      innerWidth/innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-      innerWidth,
-      innerHeight
-    );
+    stick.style.transform =
+      "translate(0,0)";
 
   }
 );
+
 </script>
 
 </body>
