@@ -6,7 +6,8 @@
 <title>My Battle Lobby</title>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+
 html,body{
   margin:0;
   width:100%;
@@ -16,12 +17,12 @@ html,body{
   font-family:Arial,sans-serif;
 }
 
-#lobby{
+#game{
   position:relative;
   width:100%;
   height:100%;
-  background:
-    radial-gradient(circle at 50% 35%,#555b80,#202437 48%,#090b12);
+  overflow:hidden;
+  background:radial-gradient(circle at 50% 30%,#555b80,#202437 48%,#090b12);
 }
 
 #game3d{
@@ -40,10 +41,9 @@ html,body{
 }
 
 .box{
-  padding:10px 15px;
+  padding:9px 13px;
   border-radius:10px;
-  background:rgba(10,10,18,.78);
-  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,10,18,.8);
   color:white;
 }
 
@@ -54,58 +54,129 @@ html,body{
 
 .title{
   position:absolute;
-  top:82px;
+  top:75px;
   width:100%;
   text-align:center;
   color:white;
-  font-size:25px;
+  font-size:23px;
   font-weight:bold;
   letter-spacing:3px;
   text-shadow:0 0 15px #8b35ff;
   z-index:10;
 }
 
-.menu{
+.health{
   position:absolute;
-  left:15px;
-  bottom:20px;
-  display:flex;
-  gap:8px;
-  z-index:10;
-}
-
-.menu button{
-  padding:12px 14px;
-  border:0;
-  border-radius:10px;
-  background:rgba(15,15,25,.88);
-  color:white;
-  font-weight:bold;
-}
-
-.play{
-  position:absolute;
-  bottom:20px;
+  top:115px;
   left:50%;
   transform:translateX(-50%);
-  padding:15px 55px;
-  border:0;
-  border-radius:13px;
-  background:#8b35ff;
-  color:white;
-  font-size:18px;
-  font-weight:bold;
-  box-shadow:0 0 20px rgba(139,53,255,.55);
+  width:150px;
+  height:14px;
+  border-radius:10px;
+  background:#222;
+  overflow:hidden;
   z-index:10;
 }
 
-.help{
+.healthBar{
+  width:100%;
+  height:100%;
+  background:#55d66b;
+  transition:.2s;
+}
+
+.joystick{
   position:absolute;
-  bottom:80px;
+  left:25px;
+  bottom:35px;
+  width:125px;
+  height:125px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.25);
+  z-index:20;
+  touch-action:none;
+}
+
+.stick{
+  position:absolute;
+  width:55px;
+  height:55px;
+  left:33px;
+  top:33px;
+  border-radius:50%;
+  background:rgba(139,53,255,.85);
+}
+
+.fire{
+  position:absolute;
+  right:25px;
+  bottom:45px;
+  width:95px;
+  height:95px;
+  border:0;
+  border-radius:50%;
+  background:#8b35ff;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  box-shadow:0 0 25px rgba(139,53,255,.6);
+  z-index:20;
+}
+
+.fire:active{
+  transform:scale(.92);
+}
+
+.info{
+  position:absolute;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#ddd;
+  font-size:12px;
+  z-index:10;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.flash{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 35px 15px #ffd84d;
+  transform:translate(-50%,-50%) scale(.2);
+  opacity:0;
+  pointer-events:none;
+  z-index:30;
+}
+
+.flash.show{
+  animation:impact .18s ease-out;
+}
+
+@keyframes impact{
+  0%{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(.2);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1.8);
+  }
+}
+
+#message{
+  position:absolute;
+  top:145px;
   width:100%;
   text-align:center;
-  color:#ddd;
-  font-size:13px;
+  color:#fff;
+  font-weight:bold;
   z-index:10;
 }
 </style>
@@ -113,7 +184,7 @@ html,body{
 
 <body>
 
-<div id="lobby">
+<div id="game">
 
   <div id="game3d"></div>
 
@@ -129,76 +200,82 @@ html,body{
   </div>
 
   <div class="title">
-    MY BATTLE LOBBY
+    TRAINING ARENA
   </div>
 
-  <div class="help">
-    👆 Arrastra al personaje para girarlo
+  <div class="health">
+    <div id="healthBar" class="healthBar"></div>
   </div>
 
-  <div class="menu">
-    <button>🎒 INVENTARIO</button>
-    <button>👕 VESTUARIO</button>
-    <button>🛒 TIENDA</button>
+  <div id="message">
+    OBJETIVO: 100 HP
   </div>
 
-  <button class="play" onclick="alert('Partida de prueba')">
-    JUGAR
+  <div id="flash" class="flash"></div>
+
+  <div id="joystick" class="joystick">
+    <div id="stick" class="stick"></div>
+  </div>
+
+  <button id="fire" class="fire">
+    🔫<br>DISPARAR
   </button>
+
+  <div class="info">
+    Arrastra el joystick para moverte • Pulsa DISPARAR para practicar
+  </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <script>
-const container = document.getElementById("game3d");
+const container=document.getElementById("game3d");
 
-const scene = new THREE.Scene();
+const scene=new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(
+const camera=new THREE.PerspectiveCamera(
   45,
-  window.innerWidth / window.innerHeight,
-  0.1,
+  innerWidth/innerHeight,
+  .1,
   100
 );
 
-camera.position.set(0,2.2,7);
+camera.position.set(0,2.4,8);
 
-const renderer = new THREE.WebGLRenderer({
+const renderer=new THREE.WebGLRenderer({
   antialias:true,
   alpha:true
 });
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
 
 container.appendChild(renderer.domElement);
 
 /* Luces */
 
-const ambient = new THREE.AmbientLight(0xffffff,1.7);
-scene.add(ambient);
+scene.add(
+  new THREE.AmbientLight(0xffffff,1.8)
+);
 
-const light = new THREE.DirectionalLight(0xffffff,2.5);
+const light=new THREE.DirectionalLight(
+  0xffffff,
+  2.5
+);
+
 light.position.set(3,6,5);
 scene.add(light);
 
 /* Suelo */
 
-const floorGeometry =
-  new THREE.CircleGeometry(4,64);
-
-const floorMaterial =
+const floor=new THREE.Mesh(
+  new THREE.CircleGeometry(6,64),
   new THREE.MeshStandardMaterial({
     color:0x171a27,
     roughness:.8
-  });
-
-const floor =
-  new THREE.Mesh(
-    floorGeometry,
-    floorMaterial
-  );
+  })
+);
 
 floor.rotation.x=-Math.PI/2;
 floor.position.y=-2;
@@ -206,266 +283,321 @@ scene.add(floor);
 
 /* Personaje */
 
-const hero = new THREE.Group();
-hero.position.y=-1.7;
-scene.add(hero);
+const player=new THREE.Group();
+player.position.set(0,-1.7,0);
+scene.add(player);
 
-/* Materiales */
+const skin=new THREE.MeshStandardMaterial({
+  color:0xd49a72
+});
 
-const skin =
-  new THREE.MeshStandardMaterial({
-    color:0xd49a72
-  });
+const hair=new THREE.MeshStandardMaterial({
+  color:0x27a83d
+});
 
-const hair =
-  new THREE.MeshStandardMaterial({
-    color:0x27a83d,
-    roughness:.65
-  });
+const clothes=new THREE.MeshStandardMaterial({
+  color:0x252b42
+});
 
-const clothes =
-  new THREE.MeshStandardMaterial({
-    color:0x252b42,
-    roughness:.7
-  });
+const jacket=new THREE.MeshStandardMaterial({
+  color:0x8b35ff
+});
 
-const jacket =
-  new THREE.MeshStandardMaterial({
-    color:0x8b35ff,
-    roughness:.55
-  });
-
-const dark =
-  new THREE.MeshStandardMaterial({
-    color:0x11131b
-  });
-
-const metal =
-  new THREE.MeshStandardMaterial({
-    color:0xbfc7d5,
-    metalness:.8,
-    roughness:.25
-  });
+const dark=new THREE.MeshStandardMaterial({
+  color:0x11131b
+});
 
 /* Cabeza */
 
-const head =
-  new THREE.Mesh(
-    new THREE.SphereGeometry(.43,32,32),
-    skin
-  );
+const head=new THREE.Mesh(
+  new THREE.SphereGeometry(.43,32,32),
+  skin
+);
 
 head.scale.set(.9,1.08,.9);
 head.position.y=2.35;
-hero.add(head);
+player.add(head);
 
 /* Cabello */
 
-const hairMesh =
-  new THREE.Mesh(
-    new THREE.SphereGeometry(.47,32,32),
-    hair
-  );
+const hairMesh=new THREE.Mesh(
+  new THREE.SphereGeometry(.47,32,32),
+  hair
+);
 
-hairMesh.scale.set(1,0.62,1);
-hairMesh.position.set(0,2.7,0);
-hero.add(hairMesh);
+hairMesh.scale.set(1,.62,1);
+hairMesh.position.y=2.7;
+player.add(hairMesh);
 
 /* Torso */
 
-const torso =
-  new THREE.Mesh(
-    new THREE.CapsuleGeometry(.52,.85,12,24),
-    clothes
-  );
+const torso=new THREE.Mesh(
+  new THREE.CapsuleGeometry(.52,.85,12,24),
+  clothes
+);
 
 torso.position.y=1.45;
-hero.add(torso);
+player.add(torso);
 
 /* Chaqueta */
 
-const coat =
-  new THREE.Mesh(
-    new THREE.BoxGeometry(1.12,1.2,.72),
-    jacket
-  );
+const coat=new THREE.Mesh(
+  new THREE.BoxGeometry(1.12,1.2,.72),
+  jacket
+);
 
 coat.position.y=1.5;
-coat.scale.set(1,.95,.9);
-hero.add(coat);
+player.add(coat);
 
 /* Brazos */
 
-function makeArm(x){
-  const arm =
-    new THREE.Mesh(
-      new THREE.CapsuleGeometry(.15,.85,8,16),
-      clothes
-    );
+function arm(x){
+  const a=new THREE.Mesh(
+    new THREE.CapsuleGeometry(.15,.85,8,16),
+    skin
+  );
 
-  arm.position.set(x,1.45,0);
-  arm.rotation.z=x>0?-0.12:0.12;
-
-  hero.add(arm);
+  a.position.set(x,1.45,0);
+  player.add(a);
 }
 
-makeArm(-.72);
-makeArm(.72);
+arm(-.72);
+arm(.72);
 
 /* Piernas */
 
-function makeLeg(x){
-  const leg =
-    new THREE.Mesh(
-      new THREE.CapsuleGeometry(.19,.95,8,16),
-      dark
-    );
-
-  leg.position.set(x,.25,0);
-  hero.add(leg);
-}
-
-makeLeg(-.28);
-makeLeg(.28);
-
-/* Botas */
-
-function makeBoot(x){
-  const boot =
-    new THREE.Mesh(
-      new THREE.BoxGeometry(.4,.25,.65),
-      dark
-    );
-
-  boot.position.set(x,-.45,.08);
-  hero.add(boot);
-}
-
-makeBoot(-.28);
-makeBoot(.28);
-
-/* Espada */
-
-const sword = new THREE.Group();
-
-const blade =
-  new THREE.Mesh(
-    new THREE.BoxGeometry(.12,1.8,.06),
-    metal
-  );
-
-blade.position.y=.85;
-sword.add(blade);
-
-const handle =
-  new THREE.Mesh(
-    new THREE.CylinderGeometry(.07,.07,.55,12),
+function leg(x){
+  const l=new THREE.Mesh(
+    new THREE.CapsuleGeometry(.19,.95,8,16),
     dark
   );
 
-handle.position.y=-.25;
-sword.add(handle);
+  l.position.set(x,.25,0);
+  player.add(l);
+}
 
-sword.position.set(.95,1.3,.1);
-sword.rotation.z=-.15;
+leg(-.28);
+leg(.28);
 
-hero.add(sword);
+/* Botas */
 
-/* Giro táctil */
+function boot(x){
+  const b=new THREE.Mesh(
+    new THREE.BoxGeometry(.4,.25,.65),
+    dark
+  );
 
-let dragging=false;
-let previousX=0;
+  b.position.set(x,-.45,.08);
+  player.add(b);
+}
 
-renderer.domElement.addEventListener(
+boot(-.28);
+boot(.28);
+
+/* Arma ficticia */
+
+const weapon=new THREE.Group();
+
+const receiver=new THREE.Mesh(
+  new THREE.BoxGeometry(.18,.18,.8),
+  dark
+);
+
+receiver.rotation.x=Math.PI/2;
+receiver.position.z=.45;
+weapon.add(receiver);
+
+const barrel=new THREE.Mesh(
+  new THREE.CylinderGeometry(.055,.055,.65,12),
+  dark
+);
+
+barrel.rotation.x=Math.PI/2;
+barrel.position.z=.95;
+weapon.add(barrel);
+
+weapon.position.set(.85,1.45,.35);
+weapon.rotation.y=.2;
+
+player.add(weapon);
+
+/* Objetivo */
+
+const target=new THREE.Group();
+
+target.position.set(0,0,-3);
+
+scene.add(target);
+
+const targetBody=new THREE.Mesh(
+  new THREE.CapsuleGeometry(.45,1.0,8,16),
+  new THREE.MeshStandardMaterial({
+    color:0xd93636
+  })
+);
+
+targetBody.position.y=.2;
+target.add(targetBody);
+
+const targetHead=new THREE.Mesh(
+  new THREE.SphereGeometry(.35,24,24),
+  new THREE.MeshStandardMaterial({
+    color:0xc98e69
+  })
+);
+
+targetHead.position.y=1.25;
+target.add(targetHead);
+
+/* Vida */
+
+let health=100;
+
+const healthBar=
+  document.getElementById("healthBar");
+
+const message=
+  document.getElementById("message");
+
+const flash=
+  document.getElementById("flash");
+
+/* Disparo */
+
+document.getElementById("fire")
+.addEventListener("click",()=>{
+
+  if(health<=0)return;
+
+  health-=10;
+
+  if(health<0)health=0;
+
+  healthBar.style.width=health+"%";
+
+  flash.classList.remove("show");
+
+  void flash.offsetWidth;
+
+  flash.classList.add("show");
+
+  message.textContent=
+    "IMPACTO • "+health+" HP";
+
+  if(health===0){
+
+    message.textContent=
+      "OBJETIVO COMPLETADO";
+
+    setTimeout(()=>{
+      health=100;
+      healthBar.style.width="100%";
+      message.textContent=
+        "OBJETIVO: 100 HP";
+    },1500);
+  }
+
+});
+
+/* Joystick */
+
+const joystick=
+  document.getElementById("joystick");
+
+const stick=
+  document.getElementById("stick");
+
+let joystickActive=false;
+
+joystick.addEventListener(
   "touchstart",
-  e=>{
-    dragging=true;
-    previousX=e.touches[0].clientX;
+  ()=>{
+    joystickActive=true;
   },
   {passive:true}
 );
 
-renderer.domElement.addEventListener(
+joystick.addEventListener(
   "touchmove",
   e=>{
-    if(!dragging)return;
 
-    const x=e.touches[0].clientX;
-    const movement=x-previousX;
+    if(!joystickActive)return;
 
-    hero.rotation.y += movement*.012;
+    const rect=joystick.getBoundingClientRect();
 
-    previousX=x;
+    const x=
+      e.touches[0].clientX-
+      rect.left-
+      rect.width/2;
+
+    const y=
+      e.touches[0].clientY-
+      rect.top-
+      rect.height/2;
+
+    const distance=Math.min(
+      Math.sqrt(x*x+y*y),
+      35
+    );
+
+    const angle=Math.atan2(y,x);
+
+    const moveX=
+      Math.cos(angle)*distance;
+
+    const moveY=
+      Math.sin(angle)*distance;
+
+    stick.style.transform=
+      `translate(${moveX}px,${moveY}px)`;
+
+    player.position.x+=moveX*.0008;
+
   },
   {passive:true}
 );
 
-renderer.domElement.addEventListener(
+joystick.addEventListener(
   "touchend",
   ()=>{
-    dragging=false;
-  }
-);
-
-/* También permite girar con mouse */
-
-let mouseDown=false;
-let oldMouseX=0;
-
-renderer.domElement.addEventListener(
-  "mousedown",
-  e=>{
-    mouseDown=true;
-    oldMouseX=e.clientX;
-  }
-);
-
-window.addEventListener(
-  "mousemove",
-  e=>{
-    if(!mouseDown)return;
-
-    hero.rotation.y +=
-      (e.clientX-oldMouseX)*.012;
-
-    oldMouseX=e.clientX;
-  }
-);
-
-window.addEventListener(
-  "mouseup",
-  ()=>{
-    mouseDown=false;
+    joystickActive=false;
+    stick.style.transform="translate(0,0)";
   }
 );
 
 /* Animación */
 
 function animate(){
+
   requestAnimationFrame(animate);
 
-  hero.position.y =
-    -1.7 + Math.sin(Date.now()*.002)*.025;
+  target.rotation.y+=.003;
+
+  player.position.y=
+    -1.7+
+    Math.sin(Date.now()*.002)*.02;
 
   renderer.render(scene,camera);
 }
 
 animate();
 
-/* Adaptación al teléfono */
+/* Pantalla */
 
 window.addEventListener(
   "resize",
   ()=>{
-    camera.aspect =
-      window.innerWidth/window.innerHeight;
+
+    camera.aspect=
+      innerWidth/innerHeight;
 
     camera.updateProjectionMatrix();
 
     renderer.setSize(
-      window.innerWidth,
-      window.innerHeight
+      innerWidth,
+      innerHeight
     );
+
   }
 );
 </script>
