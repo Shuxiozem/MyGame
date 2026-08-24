@@ -2,289 +2,472 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>My Battle Lobby</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  user-select: none;
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#080a10;
+  font-family:Arial,sans-serif;
 }
 
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #080a12;
+#lobby{
+  position:relative;
+  width:100%;
+  height:100%;
+  background:
+    radial-gradient(circle at 50% 35%,#555b80,#202437 48%,#090b12);
 }
 
-#game {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, #454b70, #171a2b 55%, #080a12);
+#game3d{
+  position:absolute;
+  inset:0;
 }
 
-.floor {
-  position: absolute;
-  bottom: -20%;
-  left: -20%;
-  width: 140%;
-  height: 55%;
-  background: linear-gradient(#303449, #11131d);
-  transform: perspective(500px) rotateX(55deg);
-  transform-origin: bottom;
+.top{
+  position:absolute;
+  top:15px;
+  left:15px;
+  right:15px;
+  display:flex;
+  justify-content:space-between;
+  z-index:10;
 }
 
-.title {
-  position: absolute;
-  top: 25px;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-shadow: 0 0 15px #8b35ff;
+.box{
+  padding:10px 15px;
+  border-radius:10px;
+  background:rgba(10,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);
+  color:white;
 }
 
-#characterArea {
-  position: absolute;
-  width: 260px;
-  height: 430px;
-  left: 50%;
-  top: 52%;
-  transform: translate(-50%, -50%);
-  perspective: 800px;
-  touch-action: none;
+.name{
+  color:#c77cff;
+  font-weight:bold;
 }
 
-.character {
-  position: absolute;
-  width: 140px;
-  height: 360px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotateY(0deg);
-  transform-style: preserve-3d;
-  transition: transform 0.08s linear;
+.title{
+  position:absolute;
+  top:82px;
+  width:100%;
+  text-align:center;
+  color:white;
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:3px;
+  text-shadow:0 0 15px #8b35ff;
+  z-index:10;
 }
 
-.head {
-  position: absolute;
-  width: 65px;
-  height: 75px;
-  left: 37px;
-  top: 0;
-  border-radius: 45%;
-  background: #c98e69;
-  transform: translateZ(15px);
+.menu{
+  position:absolute;
+  left:15px;
+  bottom:20px;
+  display:flex;
+  gap:8px;
+  z-index:10;
 }
 
-.hair {
-  position: absolute;
-  width: 70px;
-  height: 40px;
-  left: 34px;
-  top: -5px;
-  border-radius: 50% 50% 20% 20%;
-  background: #11131a;
-  transform: translateZ(20px);
+.menu button{
+  padding:12px 14px;
+  border:0;
+  border-radius:10px;
+  background:rgba(15,15,25,.88);
+  color:white;
+  font-weight:bold;
 }
 
-.body {
-  position: absolute;
-  width: 100px;
-  height: 125px;
-  left: 20px;
-  top: 80px;
-  border-radius: 25px;
-  background: #30364d;
-  transform: translateZ(5px);
+.play{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:15px 55px;
+  border:0;
+  border-radius:13px;
+  background:#8b35ff;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(139,53,255,.55);
+  z-index:10;
 }
 
-.jacket {
-  position: absolute;
-  width: 110px;
-  height: 130px;
-  left: 15px;
-  top: 78px;
-  border-radius: 25px;
-  border: 6px solid #8b35ff;
-  transform: translateZ(15px);
-}
-
-.arm {
-  position: absolute;
-  width: 28px;
-  height: 120px;
-  top: 88px;
-  border-radius: 20px;
-  background: #c98e69;
-}
-
-.arm.left {
-  left: -5px;
-  transform: rotate(8deg);
-}
-
-.arm.right {
-  right: -5px;
-  transform: rotate(-8deg);
-}
-
-.pants {
-  position: absolute;
-  width: 95px;
-  height: 120px;
-  left: 22px;
-  top: 205px;
-  border-radius: 15px;
-  background: #171a28;
-  transform: translateZ(5px);
-}
-
-.leg {
-  position: absolute;
-  width: 40px;
-  height: 105px;
-  top: 275px;
-  background: #171a28;
-  border-radius: 15px;
-}
-
-.leg.left {
-  left: 25px;
-}
-
-.leg.right {
-  right: 25px;
-}
-
-.shoe {
-  position: absolute;
-  width: 55px;
-  height: 25px;
-  bottom: 0;
-  background: #050609;
-  border-radius: 15px;
-}
-
-.shoe.left {
-  left: 12px;
-}
-
-.shoe.right {
-  right: 12px;
-}
-
-.help {
-  position: absolute;
-  bottom: 100px;
-  width: 100%;
-  text-align: center;
-  color: #ccc;
-  font-size: 14px;
-}
-
-.play {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 15px 55px;
-  border: none;
-  border-radius: 14px;
-  background: #8b35ff;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 0 20px rgba(139,53,255,.5);
+.help{
+  position:absolute;
+  bottom:80px;
+  width:100%;
+  text-align:center;
+  color:#ddd;
+  font-size:13px;
+  z-index:10;
 }
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<div id="lobby">
 
-  <div class="floor"></div>
+  <div id="game3d"></div>
+
+  <div class="top">
+    <div class="box">
+      👤 <span class="name">PLAYER</span><br>
+      Nivel 1
+    </div>
+
+    <div class="box">
+      🪙 1,250 &nbsp; 💎 150
+    </div>
+  </div>
 
   <div class="title">
     MY BATTLE LOBBY
   </div>
 
-  <div id="characterArea">
-
-    <div id="character" class="character">
-
-      <div class="hair"></div>
-      <div class="head"></div>
-
-      <div class="body"></div>
-      <div class="jacket"></div>
-
-      <div class="arm left"></div>
-      <div class="arm right"></div>
-
-      <div class="pants"></div>
-
-      <div class="leg left"></div>
-      <div class="leg right"></div>
-
-      <div class="shoe left"></div>
-      <div class="shoe right"></div>
-
-    </div>
-
-  </div>
-
   <div class="help">
-    👆 Arrastra para girar el personaje
+    👆 Arrastra al personaje para girarlo
   </div>
 
-  <button class="play" onclick="alert('¡Partida de prueba!')">
+  <div class="menu">
+    <button>🎒 INVENTARIO</button>
+    <button>👕 VESTUARIO</button>
+    <button>🛒 TIENDA</button>
+  </div>
+
+  <button class="play" onclick="alert('Partida de prueba')">
     JUGAR
   </button>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
-const area = document.getElementById("characterArea");
-const character = document.getElementById("character");
+const container = document.getElementById("game3d");
 
-let dragging = false;
-let startX = 0;
-let rotation = 0;
+const scene = new THREE.Scene();
 
-area.addEventListener("touchstart", function(event) {
-  dragging = true;
-  startX = event.touches[0].clientX;
-}, { passive: true });
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  100
+);
 
-area.addEventListener("touchmove", function(event) {
-  if (!dragging) return;
+camera.position.set(0,2.2,7);
 
-  const currentX = event.touches[0].clientX;
-  const difference = currentX - startX;
-
-  rotation += difference * 0.7;
-
-  character.style.transform =
-    `translate(-50%, -50%) rotateY(${rotation}deg)`;
-
-  startX = currentX;
-}, { passive: true });
-
-area.addEventListener("touchend", function() {
-  dragging = false;
+const renderer = new THREE.WebGLRenderer({
+  antialias:true,
+  alpha:true
 });
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+
+container.appendChild(renderer.domElement);
+
+/* Luces */
+
+const ambient = new THREE.AmbientLight(0xffffff,1.7);
+scene.add(ambient);
+
+const light = new THREE.DirectionalLight(0xffffff,2.5);
+light.position.set(3,6,5);
+scene.add(light);
+
+/* Suelo */
+
+const floorGeometry =
+  new THREE.CircleGeometry(4,64);
+
+const floorMaterial =
+  new THREE.MeshStandardMaterial({
+    color:0x171a27,
+    roughness:.8
+  });
+
+const floor =
+  new THREE.Mesh(
+    floorGeometry,
+    floorMaterial
+  );
+
+floor.rotation.x=-Math.PI/2;
+floor.position.y=-2;
+scene.add(floor);
+
+/* Personaje */
+
+const hero = new THREE.Group();
+hero.position.y=-1.7;
+scene.add(hero);
+
+/* Materiales */
+
+const skin =
+  new THREE.MeshStandardMaterial({
+    color:0xd49a72
+  });
+
+const hair =
+  new THREE.MeshStandardMaterial({
+    color:0x27a83d,
+    roughness:.65
+  });
+
+const clothes =
+  new THREE.MeshStandardMaterial({
+    color:0x252b42,
+    roughness:.7
+  });
+
+const jacket =
+  new THREE.MeshStandardMaterial({
+    color:0x8b35ff,
+    roughness:.55
+  });
+
+const dark =
+  new THREE.MeshStandardMaterial({
+    color:0x11131b
+  });
+
+const metal =
+  new THREE.MeshStandardMaterial({
+    color:0xbfc7d5,
+    metalness:.8,
+    roughness:.25
+  });
+
+/* Cabeza */
+
+const head =
+  new THREE.Mesh(
+    new THREE.SphereGeometry(.43,32,32),
+    skin
+  );
+
+head.scale.set(.9,1.08,.9);
+head.position.y=2.35;
+hero.add(head);
+
+/* Cabello */
+
+const hairMesh =
+  new THREE.Mesh(
+    new THREE.SphereGeometry(.47,32,32),
+    hair
+  );
+
+hairMesh.scale.set(1,0.62,1);
+hairMesh.position.set(0,2.7,0);
+hero.add(hairMesh);
+
+/* Torso */
+
+const torso =
+  new THREE.Mesh(
+    new THREE.CapsuleGeometry(.52,.85,12,24),
+    clothes
+  );
+
+torso.position.y=1.45;
+hero.add(torso);
+
+/* Chaqueta */
+
+const coat =
+  new THREE.Mesh(
+    new THREE.BoxGeometry(1.12,1.2,.72),
+    jacket
+  );
+
+coat.position.y=1.5;
+coat.scale.set(1,.95,.9);
+hero.add(coat);
+
+/* Brazos */
+
+function makeArm(x){
+  const arm =
+    new THREE.Mesh(
+      new THREE.CapsuleGeometry(.15,.85,8,16),
+      clothes
+    );
+
+  arm.position.set(x,1.45,0);
+  arm.rotation.z=x>0?-0.12:0.12;
+
+  hero.add(arm);
+}
+
+makeArm(-.72);
+makeArm(.72);
+
+/* Piernas */
+
+function makeLeg(x){
+  const leg =
+    new THREE.Mesh(
+      new THREE.CapsuleGeometry(.19,.95,8,16),
+      dark
+    );
+
+  leg.position.set(x,.25,0);
+  hero.add(leg);
+}
+
+makeLeg(-.28);
+makeLeg(.28);
+
+/* Botas */
+
+function makeBoot(x){
+  const boot =
+    new THREE.Mesh(
+      new THREE.BoxGeometry(.4,.25,.65),
+      dark
+    );
+
+  boot.position.set(x,-.45,.08);
+  hero.add(boot);
+}
+
+makeBoot(-.28);
+makeBoot(.28);
+
+/* Espada */
+
+const sword = new THREE.Group();
+
+const blade =
+  new THREE.Mesh(
+    new THREE.BoxGeometry(.12,1.8,.06),
+    metal
+  );
+
+blade.position.y=.85;
+sword.add(blade);
+
+const handle =
+  new THREE.Mesh(
+    new THREE.CylinderGeometry(.07,.07,.55,12),
+    dark
+  );
+
+handle.position.y=-.25;
+sword.add(handle);
+
+sword.position.set(.95,1.3,.1);
+sword.rotation.z=-.15;
+
+hero.add(sword);
+
+/* Giro táctil */
+
+let dragging=false;
+let previousX=0;
+
+renderer.domElement.addEventListener(
+  "touchstart",
+  e=>{
+    dragging=true;
+    previousX=e.touches[0].clientX;
+  },
+  {passive:true}
+);
+
+renderer.domElement.addEventListener(
+  "touchmove",
+  e=>{
+    if(!dragging)return;
+
+    const x=e.touches[0].clientX;
+    const movement=x-previousX;
+
+    hero.rotation.y += movement*.012;
+
+    previousX=x;
+  },
+  {passive:true}
+);
+
+renderer.domElement.addEventListener(
+  "touchend",
+  ()=>{
+    dragging=false;
+  }
+);
+
+/* También permite girar con mouse */
+
+let mouseDown=false;
+let oldMouseX=0;
+
+renderer.domElement.addEventListener(
+  "mousedown",
+  e=>{
+    mouseDown=true;
+    oldMouseX=e.clientX;
+  }
+);
+
+window.addEventListener(
+  "mousemove",
+  e=>{
+    if(!mouseDown)return;
+
+    hero.rotation.y +=
+      (e.clientX-oldMouseX)*.012;
+
+    oldMouseX=e.clientX;
+  }
+);
+
+window.addEventListener(
+  "mouseup",
+  ()=>{
+    mouseDown=false;
+  }
+);
+
+/* Animación */
+
+function animate(){
+  requestAnimationFrame(animate);
+
+  hero.position.y =
+    -1.7 + Math.sin(Date.now()*.002)*.025;
+
+  renderer.render(scene,camera);
+}
+
+animate();
+
+/* Adaptación al teléfono */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    camera.aspect =
+      window.innerWidth/window.innerHeight;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+  }
+);
 </script>
 
 </body>
