@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>My Battle Lobby</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #080a12;
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #454b70, #171a2b 55%, #080a12);
+}
+
+.floor {
+  position: absolute;
+  bottom: -20%;
+  left: -20%;
+  width: 140%;
+  height: 55%;
+  background: linear-gradient(#303449, #11131d);
+  transform: perspective(500px) rotateX(55deg);
+  transform-origin: bottom;
+}
+
+.title {
+  position: absolute;
+  top: 25px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-shadow: 0 0 15px #8b35ff;
+}
+
+#characterArea {
+  position: absolute;
+  width: 260px;
+  height: 430px;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  perspective: 800px;
+  touch-action: none;
+}
+
+.character {
+  position: absolute;
+  width: 140px;
+  height: 360px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: transform 0.08s linear;
+}
+
+.head {
+  position: absolute;
+  width: 65px;
+  height: 75px;
+  left: 37px;
+  top: 0;
+  border-radius: 45%;
+  background: #c98e69;
+  transform: translateZ(15px);
+}
+
+.hair {
+  position: absolute;
+  width: 70px;
+  height: 40px;
+  left: 34px;
+  top: -5px;
+  border-radius: 50% 50% 20% 20%;
+  background: #11131a;
+  transform: translateZ(20px);
+}
+
+.body {
+  position: absolute;
+  width: 100px;
+  height: 125px;
+  left: 20px;
+  top: 80px;
+  border-radius: 25px;
+  background: #30364d;
+  transform: translateZ(5px);
+}
+
+.jacket {
+  position: absolute;
+  width: 110px;
+  height: 130px;
+  left: 15px;
+  top: 78px;
+  border-radius: 25px;
+  border: 6px solid #8b35ff;
+  transform: translateZ(15px);
+}
+
+.arm {
+  position: absolute;
+  width: 28px;
+  height: 120px;
+  top: 88px;
+  border-radius: 20px;
+  background: #c98e69;
+}
+
+.arm.left {
+  left: -5px;
+  transform: rotate(8deg);
+}
+
+.arm.right {
+  right: -5px;
+  transform: rotate(-8deg);
+}
+
+.pants {
+  position: absolute;
+  width: 95px;
+  height: 120px;
+  left: 22px;
+  top: 205px;
+  border-radius: 15px;
+  background: #171a28;
+  transform: translateZ(5px);
+}
+
+.leg {
+  position: absolute;
+  width: 40px;
+  height: 105px;
+  top: 275px;
+  background: #171a28;
+  border-radius: 15px;
+}
+
+.leg.left {
+  left: 25px;
+}
+
+.leg.right {
+  right: 25px;
+}
+
+.shoe {
+  position: absolute;
+  width: 55px;
+  height: 25px;
+  bottom: 0;
+  background: #050609;
+  border-radius: 15px;
+}
+
+.shoe.left {
+  left: 12px;
+}
+
+.shoe.right {
+  right: 12px;
+}
+
+.help {
+  position: absolute;
+  bottom: 100px;
+  width: 100%;
+  text-align: center;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.play {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 55px;
+  border: none;
+  border-radius: 14px;
+  background: #8b35ff;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 0 20px rgba(139,53,255,.5);
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <div class="floor"></div>
+
+  <div class="title">
+    MY BATTLE LOBBY
+  </div>
+
+  <div id="characterArea">
+
+    <div id="character" class="character">
+
+      <div class="hair"></div>
+      <div class="head"></div>
+
+      <div class="body"></div>
+      <div class="jacket"></div>
+
+      <div class="arm left"></div>
+      <div class="arm right"></div>
+
+      <div class="pants"></div>
+
+      <div class="leg left"></div>
+      <div class="leg right"></div>
+
+      <div class="shoe left"></div>
+      <div class="shoe right"></div>
+
+    </div>
+
+  </div>
+
+  <div class="help">
+    👆 Arrastra para girar el personaje
+  </div>
+
+  <button class="play" onclick="alert('¡Partida de prueba!')">
+    JUGAR
+  </button>
+
+</div>
+
+<script>
+const area = document.getElementById("characterArea");
+const character = document.getElementById("character");
+
+let dragging = false;
+let startX = 0;
+let rotation = 0;
+
+area.addEventListener("touchstart", function(event) {
+  dragging = true;
+  startX = event.touches[0].clientX;
+}, { passive: true });
+
+area.addEventListener("touchmove", function(event) {
+  if (!dragging) return;
+
+  const currentX = event.touches[0].clientX;
+  const difference = currentX - startX;
+
+  rotation += difference * 0.7;
+
+  character.style.transform =
+    `translate(-50%, -50%) rotateY(${rotation}deg)`;
+
+  startX = currentX;
+}, { passive: true });
+
+area.addEventListener("touchend", function() {
+  dragging = false;
+});
+</script>
+
+</body>
+</html>
