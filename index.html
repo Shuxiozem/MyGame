@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no"
+    >
+
+    <title>Nova Arena</title>
+
+    <link
+        rel="stylesheet"
+        href="css/main.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- MENÚ PRINCIPAL -->
+
+    <div id="menu">
+
+        <div class="menu-card">
+
+            <h1>Nova Arena</h1>
+
+            <p>
+                Arena de combate
+            </p>
+
+            <button id="playButton">
+                JUGAR
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HUD -->
+
+    <div id="hud">
+
+        <div class="hud-health">
+            Vida:
+            <span id="health">
+                100
+            </span>
+        </div>
+
+        <div class="hud-weapon">
+            <span id="weapon">
+                Nova Rifle
+            </span>
+        </div>
+
+        <div class="hud-ammo">
+            Munición:
+            <span id="ammo">
+                30
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- INFORMACIÓN DE PARTIDA -->
+
+    <div id="matchScreen">
+
+        <div id="matchStatus">
+            Esperando...
+        </div>
+
+        <div>
+            Jugadores:
+            <span id="playerCount">
+                0
+            </span>
+        </div>
+
+        <div id="matchTimer">
+            00:00
+        </div>
+
+    </div>
+
+
+    <!-- CANVAS DEL JUEGO -->
+
+    <canvas id="gameCanvas"></canvas>
+
+
+    <!-- CONTROL TÁCTIL -->
+
+    <div id="mobileControls">
+
+        <div id="joystick">
+            <div id="joystickKnob"></div>
+        </div>
+
+        <button id="fireButton">
+            FIRE
+        </button>
+
+    </div>
+
+
+    <!-- MOTOR DEL JUEGO -->
+
+    <script type="module"
+        src="js/main.js">
+    </script>
+
+</body>
+
+</html>
