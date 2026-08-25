@@ -1,0 +1,61 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    overflow: hidden;
+
+    background: #080b16;
+    color: #ffffff;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body {
+    position: fixed;
+    inset: 0;
+}
+
+#game {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    outline: none;
+}
+
+button {
+    border: none;
+    outline: none;
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+button:active {
+    transform: scale(0.95);
+}
